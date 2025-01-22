@@ -27,9 +27,17 @@ search_value = st.text_input(f"Enter {search_type}")
 # Button to trigger search
 if st.button("Search"):
     if search_value:
+        search_value = search_value.strip()  # Trim any leading/trailing whitespace
         with st.spinner("Searching..."):
-            # Filter mock data based on the search type
-            filtered_data = mock_df[mock_df[search_type].str.contains(search_value, case=False, na=False)]
+            if search_type == "SMILES":
+                # Clean the input SMILES string by removing unnecessary spaces
+                search_value = search_value.replace(" ", "")
+                # Filter mock data based on the SMILES search type
+                filtered_data = mock_df[mock_df["SMILES"].str.contains(search_value, case=False, na=False)]
+            else:
+                # Filter mock data based on the Name search type
+                filtered_data = mock_df[mock_df["Name"].str.contains(search_value, case=False, na=False)]
+
             if not filtered_data.empty:
                 st.success(f"Found {len(filtered_data)} compound(s).")
                 st.dataframe(filtered_data)
