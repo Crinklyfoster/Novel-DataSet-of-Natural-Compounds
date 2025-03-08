@@ -29,13 +29,11 @@ if st.button("Search"):
     if search_value:
         search_value = search_value.strip()  # Trim any leading/trailing whitespace
         with st.spinner("Searching..."):
-            # Filter mock data based on the search type
-            filtered_data = mock_df[mock_df[search_type].str.contains(search_value, case=False, na=False)]
             if search_type == "SMILES":
                 # Clean the input SMILES string by removing unnecessary spaces
                 search_value = search_value.replace(" ", "")
-                # Filter mock data based on the SMILES search type
-                filtered_data = mock_df[mock_df["SMILES"].str.contains(search_value, case=False, na=False)]
+                # Filter mock data using literal string search (regex=False)
+                filtered_data = mock_df[mock_df["SMILES"].str.contains(search_value, case=False, regex=False, na=False)]
             else:
                 # Filter mock data based on the Name search type
                 filtered_data = mock_df[mock_df["Name"].str.contains(search_value, case=False, na=False)]
@@ -47,6 +45,6 @@ if st.button("Search"):
                 st.warning("No compounds found.")
     else:
         st.error("Please enter a search value.")
- 
+
 # Additional styling and information
 st.caption("Powered by Streamlit - Mock UI")
